@@ -1,4 +1,4 @@
-package com.sugar.crytotrading;
+package com.sugar.cryptotrading;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

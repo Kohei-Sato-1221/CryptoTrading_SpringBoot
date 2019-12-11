@@ -1,4 +1,4 @@
-package com.sugar.crytotrading.tasks;
+package com.sugar.cryptotrading.tasks;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
