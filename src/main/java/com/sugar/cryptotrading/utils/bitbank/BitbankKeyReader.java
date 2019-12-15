@@ -1,4 +1,4 @@
-package com.sugar.cryptotrading.utils;
+package com.sugar.cryptotrading.utils.bitbank;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 import cc.bitbank.entity.enums.CurrencyPair;
 
-public class SugarKeyReader {
-	public static SugarKeyReader skr = new SugarKeyReader();
+public class BitbankKeyReader {
+	public static BitbankKeyReader skr = new BitbankKeyReader();
 	private final String[] keyFilePaths = {"/Users/kohei.sato/bitbank.key",
 	                                      "/Users/koheisato/bitbank.key",
 	                                      "/home/kohei.sato/work/bitbank.key"};
@@ -22,9 +22,9 @@ public class SugarKeyReader {
 								           "/Users/koheisato/ordervalue.txt",
 								           "/home/kohei.sato/work/ordervalue.txt"};
 	private static HashMap<String, String> keyMap;
-	private static List<SugarOrderValues> valList;
+	private static List<BitbankOrderValues> valList;
 	
-	private SugarKeyReader(){
+	private BitbankKeyReader(){
 		convertFromFileToHashMap();
 		convertFromFileToValuelist();
 	}
@@ -56,7 +56,7 @@ public class SugarKeyReader {
 	}
 	
 	private void convertFromFileToValuelist() {
-		valList = new ArrayList<SugarOrderValues>();
+		valList = new ArrayList<BitbankOrderValues>();
 		BufferedReader br = null;
 		for(String path: valFilePaths) {
 			try {
@@ -71,7 +71,7 @@ public class SugarKeyReader {
 			lines.forEach(line -> {
 				System.out.println("line:" + line);
 				String[] keyAndValue = line.split(",");
-				if(keyAndValue.length == 3) valList.add(new SugarOrderValues(keyAndValue[0], keyAndValue[1], keyAndValue[2]));
+				if(keyAndValue.length == 3) valList.add(new BitbankOrderValues(keyAndValue[0], keyAndValue[1], keyAndValue[2]));
 			});
 			br.close();
 		} catch (NullPointerException e) {
@@ -84,7 +84,7 @@ public class SugarKeyReader {
 	}
 
 	
-	public static SugarKeyReader getReader() {
+	public static BitbankKeyReader getReader() {
 		return skr;
 	}
 	
@@ -106,8 +106,8 @@ public class SugarKeyReader {
 		return keyMap.get("secretkey");
 	}
 	
-	public static SugarOrderValues getCoinValue(CurrencyPair pair) {
-		final List<SugarOrderValues> filtereList = valList.stream()
+	public static BitbankOrderValues getCoinValue(CurrencyPair pair) {
+		final List<BitbankOrderValues> filtereList = valList.stream()
 														  .filter(value -> value.getPair().equals(pair))
 														  .collect(Collectors.toList());
 		return filtereList.get(0);

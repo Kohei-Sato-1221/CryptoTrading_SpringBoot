@@ -1,4 +1,4 @@
-package com.sugar.cryptotrading.utils;
+package com.sugar.cryptotrading.utils.bitbank;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -7,7 +7,7 @@ import cc.bitbank.Bitbankcc;
 import cc.bitbank.entity.enums.CurrencyPair;
 import cc.bitbank.exception.BitbankException;
 
-public class SugarTickerShower {
+public class BitbankTickerShower {
 
 	public static void main(String[] args) {
 //		RestClient.setRestApiKey(SugarKeyReader.getRestApiKey());
@@ -15,9 +15,9 @@ public class SugarTickerShower {
 //		if(true) return;
 		Bitbankcc bb = new Bitbankcc();
 		try{
-			SugarOrderValues xrpValues = SugarKeyReader.getCoinValue(CurrencyPair.XRP_JPY);
-			xrpValues = xrpValues != null ? xrpValues : new SugarOrderValues("xrp_jpy", "50", "75");
-			SugarBuyer xrpbuyer = new SugarBuyer(bb, xrpValues, new BigDecimal("1"), 2, 2);
+			BitbankOrderValues xrpValues = BitbankKeyReader.getCoinValue(CurrencyPair.XRP_JPY);
+			xrpValues = xrpValues != null ? xrpValues : new BitbankOrderValues("xrp_jpy", "50", "75");
+			BitbankBuyer xrpbuyer = new BitbankBuyer(bb, xrpValues, new BigDecimal("1"), 2, 2);
 			while(true) {
 				try {
 					xrpbuyer.showTicker();

@@ -7,6 +7,7 @@ import javax.ws.rs.client.WebTarget;
 
 public class RestClient {
 	private static String restApiKey = "";
+	private static String apiKey = "";
 	
 	/*　参考：http://www.techscore.com/blog/2016/09/20/jersey-client-api/　*/
 	public static String get(String subject, String content) {
@@ -31,5 +32,9 @@ public class RestClient {
 	
 	public static void setRestApiKey(String restApiKey) {
 		RestClient.restApiKey = restApiKey;
+	}
+	
+	public static void setApiKey(String apiKey) {
+		RestClient.apiKey = apiKey;
 	}
 }

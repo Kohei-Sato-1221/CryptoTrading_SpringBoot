@@ -1,4 +1,4 @@
-package com.sugar.cryptotrading.utils;
+package com.sugar.cryptotrading.utils.bitbank;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ import cc.bitbank.entity.enums.OrderSide;
 import cc.bitbank.entity.enums.OrderType;
 import cc.bitbank.exception.BitbankException;
 
-public class SugarBuyer {
+public class BitbankBuyer {
 	private CurrencyPair pair;
 	private BigDecimal baseAmountJPY;
 	private BigDecimal baseAmountJPYLow; 
@@ -21,7 +21,7 @@ public class SugarBuyer {
 	Bitbankcc bb;
 	Ticker ticker;
 	
-	public SugarBuyer(Bitbankcc bb, SugarOrderValues sov,BigDecimal minimumBuyAmount, int roundPrice, int roundAmt) throws BitbankException, IOException {
+	public BitbankBuyer(Bitbankcc bb, BitbankOrderValues sov,BigDecimal minimumBuyAmount, int roundPrice, int roundAmt) throws BitbankException, IOException {
 		this.bb = bb;
 		this.pair = sov.getPair();
 		this.ticker = bb.getTicker(pair);

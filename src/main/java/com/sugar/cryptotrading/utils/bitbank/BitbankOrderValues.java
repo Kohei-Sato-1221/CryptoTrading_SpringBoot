@@ -1,4 +1,4 @@
-package com.sugar.cryptotrading.utils;
+package com.sugar.cryptotrading.utils.bitbank;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -7,12 +7,12 @@ import cc.bitbank.Bitbankcc;
 import cc.bitbank.entity.enums.CurrencyPair;
 import cc.bitbank.exception.BitbankException;
 
-public class SugarOrderValues {
+public class BitbankOrderValues {
 	private CurrencyPair pair;
 	private BigDecimal baseAmountJPY;
 	private BigDecimal baseAmountJPYLow; 
 	
-	public SugarOrderValues(String pairStr, String baseAmountJPY, String baseAmountJPYLow){
+	public BitbankOrderValues(String pairStr, String baseAmountJPY, String baseAmountJPYLow){
 		this.setPair(convertPair(pairStr));
 		this.setBaseAmountJPY(new BigDecimal(baseAmountJPY));
 		this.setBaseAmountJPYLow(new BigDecimal(baseAmountJPYLow));					
