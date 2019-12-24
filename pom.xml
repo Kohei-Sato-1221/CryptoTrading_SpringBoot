@@ -33,18 +33,17 @@
 	        <version>1.1.0</version>
 	    </dependency>
 	    
-	    <dependency>
+	    <!--dependency>
 	        <groupId>sugar.zaif</groupId>
 	        <artifactId>java-zaif</artifactId>
 	        <version>1.0.0</version>
-	    </dependency>
-	    	    
-	    
-	    <!-- dependency>
-    		<groupId>javax.ws.rs</groupId>
-    		<artifactId>javax.ws.rs-api</artifactId>
-    		<version>2.1.1</version>
-		</dependency-->
+	        <exclusions>
+	        	<exclusion>
+	          		<groupId>jakarta.validation</groupId>
+	          		<artifactId>jakarta.validation-api</artifactId>
+	        	</exclusion>
+	      	</exclusions> 
+	    </dependency-->
 	    
 	    <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -52,11 +51,17 @@
             <version>4.3.6</version>
         </dependency>
         
-        <!-- dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.8.11.1</version>
-        </dependency-->
+        <dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>1.7.2</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20180813</version>
+		</dependency>
 	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

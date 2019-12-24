@@ -38,16 +38,16 @@ public class ZaifBuyer {
 		BigDecimal buyPrice = calculateBuyPriceNormal();
 		BigDecimal buyVol = baseAmountJPY.divide(buyPrice, roundAmt, BigDecimal.ROUND_HALF_UP);			
 		System.out.println(buyPrice + " " + buyVol);
-		ExchangeApi lp= new ExchangeApi(apiKey);
-		TradeResult r= lp.trade(pair,TradeType.BID, buyPrice.doubleValue(), buyVol.doubleValue());
+		ExchangeApi lp = new ExchangeApi(apiKey);
+		TradeResult r = lp.trade(pair,TradeType.BID, buyPrice.doubleValue(), buyVol.doubleValue());
 		if(r == null) {
 			System.out.println("Order result is Null! ");			
 		}else {
 			System.out.println("order success? - " + r.success + " error type:" + r.error_type + " error text:" + r.error_text);			
 			
 		}
-		System.out.println("# buyorder:" + pair + " price:" + buyPrice + " vol:" + buyVol);
-		return pair + " price:" + buyPrice + " vol:" + buyVol;
+		System.out.println("# buyorder:" + pair + " price:" + buyPrice.toString() + " vol:" + buyVol.toString());
+		return pair + " price:" + buyPrice.toString() + " vol:" + buyVol.toString();
 	}
 
 	public String sendBuyOrderLower() throws IOException, NullPointerException{
@@ -88,13 +88,13 @@ public class ZaifBuyer {
 	private BigDecimal calculateBuyPrice(String percent1, String percent2) {
 		BigDecimal lastPrice = new BigDecimal(lp.lastPrice());
 		BigDecimal lowPrice = new BigDecimal(lp.ticker().low);
-		System.out.println("lastPrice:" + lastPrice + "/ lowPrice:" + lowPrice);
+		System.out.println("lastPrice:" + lastPrice.toString() + "/ lowPrice:" + lowPrice.toString());
 		lastPrice = lastPrice.multiply(new BigDecimal(percent1));
 	    lowPrice = lowPrice.multiply(new BigDecimal(percent2));
-	    System.out.println("#lastPrice:" + lastPrice + "/ #lowPrice:" + lowPrice);
+	    System.out.println("#lastPrice:" + lastPrice.toString() + "/ #lowPrice:" + lowPrice.toString());
 	    BigDecimal retValue = lastPrice.add(lowPrice);
 	    retValue = retValue.setScale(roundPrice, BigDecimal.ROUND_HALF_UP);
-	    System.out.println("calculateBuyPrice: " + retValue);
+	    System.out.println("calculateBuyPrice: " + retValue.toString());
 	    return retValue;
 	}
 	

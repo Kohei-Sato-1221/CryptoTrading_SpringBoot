@@ -13,17 +13,14 @@ public class SugarScheduler{
 
 	@Scheduled(fixedRate = 86400000)
 	public void dailyScheduledJobs() {
-		System.out.println("### SugarScheduler#dailyScheduledJobs");
+		System.out.println("### SugarScheduler#dailyScheduledJobs START!!");
 		TradingJob bbJob = new BitbankJobImpl();
 		TradingJob zaifJob = new ZaifJobImpl();
 		
-		System.out.println("### START:bbJob.placeBuyOrders");
-		bbJob.placeBuyOrders();
-		System.out.println("### END:bbJob.placeBuyOrders");
-		System.out.println("### START:zaifJob");
+//		bbJob.placeBuyOrders();
 		zaifJob.placeBuyOrders();
-		System.out.println("### END:zaifJob");
-
+		
+		System.out.println("### SugarScheduler#dailyScheduledJobs END!!");
 	}
 	
 }

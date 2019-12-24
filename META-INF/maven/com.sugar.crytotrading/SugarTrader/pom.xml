@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.2.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.sugar.crytotrading</groupId>
+	<artifactId>SugarTrader</artifactId>
+	<version>1.0.0</version>
+	<name>CryptoTrading_SpringBoot</name>
+	<description>Application to trade crypto currencies by calling several exchange's API
+</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+	
+	<repositories>
+	    <repository>
+	        <id>java-bitbankcc</id>
+	        <url>https://raw.github.com/bitbankinc/java-bitbankcc/mvn-repo/</url>
+	    </repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+	        <groupId>cc.bitbank</groupId>
+	        <artifactId>java-bitbankcc</artifactId>
+	        <version>1.1.0</version>
+	    </dependency>
+	    
+	    <dependency>
+	        <groupId>sugar.zaif</groupId>
+	        <artifactId>java-zaif</artifactId>
+	        <version>1.0.0</version>
+	    </dependency>
+	    	    
+	    
+	    <!-- dependency>
+    		<groupId>javax.ws.rs</groupId>
+    		<artifactId>javax.ws.rs-api</artifactId>
+    		<version>2.1.1</version>
+		</dependency-->
+	    
+	    <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
+        
+        <!-- dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.11.1</version>
+        </dependency-->
+	
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+	            <configuration>
+	                <mainClass>com.sugar.cryptotrading.CryptoTradingSpringBootApplication</mainClass>
+	            </configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
