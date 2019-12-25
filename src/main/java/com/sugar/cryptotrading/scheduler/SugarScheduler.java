@@ -17,7 +17,7 @@ public class SugarScheduler{
 		TradingJob bbJob = new BitbankJobImpl();
 		TradingJob zaifJob = new ZaifJobImpl();
 		
-//		bbJob.placeBuyOrders();
+		bbJob.placeBuyOrders();
 		zaifJob.placeBuyOrders();
 		
 		System.out.println("### SugarScheduler#dailyScheduledJobs END!!");
