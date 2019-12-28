@@ -11,6 +11,10 @@ import com.sugar.cryptotrading.restapi.RestClient;
 import com.sugar.cryptotrading.utils.zaif.ZaifBuyer;
 import com.sugar.cryptotrading.utils.zaif.ZaifKeyReader;
 import com.sugar.cryptotrading.utils.zaif.ZaifOrderValues;
+
+import jp.nyatla.jzaif.api.ApiKey;
+import jp.nyatla.jzaif.api.ExchangeApi;
+import jp.nyatla.jzaif.api.PublicApi;
 import jp.nyatla.jzaif.types.CurrencyPair;
 
 public class ZaifJobImpl implements TradingJob {
@@ -26,20 +30,50 @@ public class ZaifJobImpl implements TradingJob {
 		try {
 			ZaifOrderValues xemValues = ZaifKeyReader.getCoinValue(CurrencyPair.XEMJPY);
 			ZaifOrderValues ethValues = ZaifKeyReader.getCoinValue(CurrencyPair.ETHJPY);
+
+			ZaifBuyer xemBuyer01;
+			ZaifBuyer xemBuyer02;
 			if(xemValues != null) {
-				sbuyers.add(new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), xemValues.getBaseAmountJPY(), xemValues.getBaseAmountJPYLow(), 3, 1, APIKEY, SECKEY));
+				xemBuyer01 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), xemValues.getBaseAmountJPY(), xemValues.getBaseAmountJPY(), 3, 1, APIKEY, SECKEY);
+				Thread.sleep(1000);
+				xemBuyer02 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), xemValues.getBaseAmountJPY(), xemValues.getBaseAmountJPYLow(), 3, 1, APIKEY, SECKEY);
+				Thread.sleep(1000);
 			}else {
-				sbuyers.add(new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(250), 3, 1, APIKEY, SECKEY));
+				xemBuyer01 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(200), 3, 1, APIKEY, SECKEY);
+				Thread.sleep(1000);
+				xemBuyer02 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(300), 3, 1, APIKEY, SECKEY);
+				Thread.sleep(1000);
 			}
+			xemBuyer01.setBuyPriceNormal();
+			xemBuyer02.setBuyPriceLower();
+			sbuyers.add(xemBuyer01);
+			sbuyers.add(xemBuyer02);
+			
+			ZaifBuyer ethBuyer01;
+			ZaifBuyer ethBuyer02;
+			
 			if(ethValues != null) {
-				sbuyers.add(new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPYLow(), -2, 4, APIKEY, SECKEY));
+				ethBuyer01 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPY(), -2, 4, APIKEY, SECKEY);
+				Thread.sleep(1000);
+				ethBuyer02 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPYLow(), -2, 4, APIKEY, SECKEY);
+				Thread.sleep(1000);
 			}else {
-				sbuyers.add(new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(250), -2, 4, APIKEY, SECKEY));
+				ethBuyer01 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(200), -2, 4, APIKEY, SECKEY);
+				Thread.sleep(1000);
+				ethBuyer02 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(300), -2, 4, APIKEY, SECKEY);
+				Thread.sleep(2000);
 			}
+			
+			ethBuyer01.setBuyPriceNormal();
+			ethBuyer02.setBuyPriceLower();
+			sbuyers.add(ethBuyer01);
+			sbuyers.add(ethBuyer02);
+			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			return;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		
 		String NEWLINE = System.lineSeparator();
@@ -53,8 +87,6 @@ public class ZaifJobImpl implements TradingJob {
 				sb.append("【" + temp_buyer.getCurrentPair() + "】");
 				sb.append(NEWLINE);
 				sb.append(temp_buyer.sendBuyOrder());
-				sb.append(NEWLINE);
-				sb.append(temp_buyer.sendBuyOrderLower());
 				sb.append(NEWLINE);
 				sb.append(temp_buyer.getCurrentPrice());
 				sb.append(NEWLINE);
