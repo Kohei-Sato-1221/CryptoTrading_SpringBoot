@@ -15,6 +15,7 @@ import jp.nyatla.jzaif.types.TradeType;
 public class ZaifBuyer {
 	private CurrencyPair pair;
 	private BigDecimal baseAmountJPY;
+	private BigDecimal baseAmountJPYLow;
 	private BigDecimal minimumBuyAmount;
 	private BigDecimal buyPrice;
 	private BigDecimal buyVol;
@@ -28,6 +29,7 @@ public class ZaifBuyer {
 		this.pair = pair;
 		this.lp = new PublicApi(pair);
 		this.baseAmountJPY = baseAmountJPY;
+		this.baseAmountJPYLow = baseAmountJPYLow;
 		this.minimumBuyAmount = minimumBuyAmount;
 		this.roundPrice = roundPrice;
 		this.roundAmt = roundAmt;
@@ -66,7 +68,7 @@ public class ZaifBuyer {
 	
 	public void setBuyPriceLower() {
 		this.buyPrice = calculateBuyPrice("0.2","0.8");
-		this.buyVol = baseAmountJPY.divide(this.buyPrice, this.roundAmt, BigDecimal.ROUND_HALF_UP);	
+		this.buyVol = baseAmountJPYLow.divide(this.buyPrice, this.roundAmt, BigDecimal.ROUND_HALF_UP);	
 	}
 	
 	public BigDecimal calculateBuyPriceLower() {
