@@ -63,9 +63,11 @@ public class ZaifJobImpl implements TradingJob {
 			
 			if(ethValues != null) {
 				if(strategy == 0) {
-					ethBuyer = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPY(), -2, 4, APIKEY, SECKEY);					
+					ethBuyer = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPY(), -2, 4, APIKEY, SECKEY);
+					ethBuyer.setBuyPriceNormal();
 				}else {
 					ethBuyer = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPYLow(), -2, 4, APIKEY, SECKEY);					
+					ethBuyer.setBuyPriceLower();
 				}
 				Thread.sleep(1000);
 			}else {
