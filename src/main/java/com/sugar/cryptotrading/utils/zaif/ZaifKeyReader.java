@@ -72,7 +72,7 @@ public class ZaifKeyReader {
 		try {
 			Stream<String> lines = br.lines();
 			lines.forEach(line -> {
-				System.out.println("line:" + line);
+//				System.out.println("line:" + line);
 				String[] keyAndValue = line.split(",");
 				if(keyAndValue.length == 3) {
 					ZaifOrderValues temVal = new ZaifOrderValues(keyAndValue[0], keyAndValue[1], keyAndValue[2]);
@@ -96,11 +96,11 @@ public class ZaifKeyReader {
 	}
 	
 	
-	public void showKeyValue() {
-		System.out.println("apikey:" + keyMap.get("apikey"));
-		System.out.println("secretkey:" + keyMap.get("secretkey"));
-	}
-	
+//	public void showKeyValue() {
+//		System.out.println("apikey:" + keyMap.get("apikey"));
+//		System.out.println("secretkey:" + keyMap.get("secretkey"));
+//	}
+//	
 	public static ZaifOrderValues getCoinValue(CurrencyPair pair) {
 		final List<ZaifOrderValues> filterList = valList.stream()
 				.filter(value -> value.getPair().equals(pair))

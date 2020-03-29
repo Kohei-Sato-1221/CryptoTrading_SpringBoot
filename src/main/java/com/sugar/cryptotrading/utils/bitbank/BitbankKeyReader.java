@@ -69,7 +69,7 @@ public class BitbankKeyReader {
 		try {
 			Stream<String> lines = br.lines();
 			lines.forEach(line -> {
-				System.out.println("line:" + line);
+//				System.out.println("line:" + line);
 				String[] keyAndValue = line.split(",");
 				if(keyAndValue.length == 3) valList.add(new BitbankOrderValues(keyAndValue[0], keyAndValue[1], keyAndValue[2]));
 			});
@@ -89,11 +89,11 @@ public class BitbankKeyReader {
 	}
 	
 	
-	public void showKeyValue() {
-		System.out.println("apikey:" + keyMap.get("apikey"));
-		System.out.println("secretkey:" + keyMap.get("secretkey"));
-	}
-	
+//	public void showKeyValue() {
+//		System.out.println("apikey:" + keyMap.get("apikey"));
+//		System.out.println("secretkey:" + keyMap.get("secretkey"));
+//	}
+//	
 	public static String getRestApiKey() {
 		return keyMap.get("restapikey");
 	}
@@ -108,8 +108,14 @@ public class BitbankKeyReader {
 	
 	public static BitbankOrderValues getCoinValue(CurrencyPair pair) {
 		final List<BitbankOrderValues> filtereList = valList.stream()
-														  .filter(value -> value.getPair().equals(pair))
-														  .collect(Collectors.toList());
+				.filter(value -> value.getPair().equals(pair))
+				.collect(Collectors.toList());
 		return filtereList.get(0);
+	}
+	
+	public static List<BitbankOrderValues> getCoinValueList() {
+		final List<BitbankOrderValues> filtereList = valList.stream()
+														  .collect(Collectors.toList());
+		return filtereList;
 	}
 }

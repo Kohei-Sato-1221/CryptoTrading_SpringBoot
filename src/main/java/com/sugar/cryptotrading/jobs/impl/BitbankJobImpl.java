@@ -3,7 +3,11 @@ package com.sugar.cryptotrading.jobs.impl;
 import java.io.IOException;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -14,23 +18,16 @@ import com.sugar.cryptotrading.utils.bitbank.BitbankKeyReader;
 import com.sugar.cryptotrading.utils.bitbank.BitbankOrderValues;
 
 import cc.bitbank.Bitbankcc;
+import cc.bitbank.entity.Trades;
+import cc.bitbank.entity.Ticker;
+import cc.bitbank.entity.Trade;
 import cc.bitbank.entity.enums.CurrencyPair;
 import cc.bitbank.exception.BitbankException;
 
 public class BitbankJobImpl implements TradingJob {
-	private String[] tradePairs;
-	
-	public BitbankJobImpl() {
-		String[] temp_pairs = {"btc", "xrp", "mona", "bcc"};
-		this.tradePairs = temp_pairs;
-	}
-	
-	public BitbankJobImpl(String[] tradePairs){
-		this.tradePairs = tradePairs;
-	}
 	
 	@Override
-	public void placeBuyOrders() {
+	public void placeBuyOrders(int strategy) {
 		System.out.println("Bitbank/TSUMITATE ORDERS! " + new Date());
 		
 		String NEWLINE = System.lineSeparator();
@@ -43,27 +40,52 @@ public class BitbankJobImpl implements TradingJob {
 		sb.append("Tsumitate Orders:");
 		sb.append(NEWLINE);
 		try{
-			BitbankOrderValues btcValues = BitbankKeyReader.getCoinValue(CurrencyPair.BTC_JPY);
-			btcValues = btcValues != null ? btcValues : new BitbankOrderValues("btc_jpy", "150", "250");
-			BitbankOrderValues xrpValues = BitbankKeyReader.getCoinValue(CurrencyPair.XRP_JPY);
-			xrpValues = xrpValues != null ? xrpValues : new BitbankOrderValues("xrp_jpy", "50", "75");
-			BitbankOrderValues monaValues = BitbankKeyReader.getCoinValue(CurrencyPair.MONA_JPY);
-			monaValues = monaValues != null ? monaValues : new BitbankOrderValues("monac_jpy", "50", "75");
-			BitbankOrderValues bccValues = BitbankKeyReader.getCoinValue(CurrencyPair.BCC_JPY);
-			bccValues = bccValues != null ? bccValues : new BitbankOrderValues("bcc_jpy", "50", "75");
-//			SugarOrderValues ethValues = SugarKeyReader.getCoinValue(CurrencyPair.ETH_BTC);
-//			ethValues = ethValues != null ? ethValues : new SugarOrderValues("eth_btc", "200", "200");
-			if(hasTradePair(this.tradePairs, "btc")) buyers.add(new BitbankBuyer(bb, BitbankKeyReader.getCoinValue(CurrencyPair.BTC_JPY), new BigDecimal("0.0002"), 2, 4));
-			if(hasTradePair(this.tradePairs, "xrp")) buyers.add(new BitbankBuyer(bb, BitbankKeyReader.getCoinValue(CurrencyPair.XRP_JPY), new BigDecimal("1"), 2, 2));
-			if(hasTradePair(this.tradePairs, "mona")) buyers.add(new BitbankBuyer(bb, BitbankKeyReader.getCoinValue(CurrencyPair.MONA_JPY), new BigDecimal("0.3"), 2, 2));
-			if(hasTradePair(this.tradePairs, "bcc")) buyers.add(new BitbankBuyer(bb, BitbankKeyReader.getCoinValue(CurrencyPair.BCC_JPY), new BigDecimal("0.0005"), 2, 4));
-//			if(hasTradePair(args, "eth")) buyers.add(new SugarBuyer(bb, SugarKeyReader.getCoinValue(CurrencyPair.ETH_BTC), new BigDecimal("0.0001"), 8, 8));
-			
+			List<BitbankOrderValues> orders = BitbankKeyReader.getCoinValueList();
+			orders.forEach(order -> {
+				//BigDecimal minimumBuyAmount, int roundPrice, int roundAmt
+				BigDecimal minimumBuyAmount = null;
+				int roundPrice = 0;
+				int roundAmt = 0;
+				CurrencyPair pair = order.getPair();
+				try {
+					Ticker ticker = bb.getTicker(pair);
+					BigDecimal lastPrice = ticker.last;
+					BigDecimal lowPrice = ticker.low;
+					if(pair.equals(CurrencyPair.BTC_JPY)) {
+						minimumBuyAmount = new BigDecimal("0.0002");
+						roundPrice = 2;
+						roundAmt = 4;
+					}else if(pair.equals(CurrencyPair.XRP_JPY)) {
+						minimumBuyAmount = new BigDecimal("1");
+						roundPrice = 2;
+						roundAmt = 2;
+					}else if(pair.equals(CurrencyPair.MONA_JPY)) {
+						minimumBuyAmount = new BigDecimal("0.3");
+						roundPrice = 2;
+						roundAmt = 2;
+					}else if(pair.equals(CurrencyPair.BCC_JPY)){
+						minimumBuyAmount = new BigDecimal("0.0005");
+						roundPrice = 2;
+						roundAmt = 4;
+					}
+					
+					if(minimumBuyAmount != null) {
+						BitbankBuyer buyer = new BitbankBuyer(bb, pair, order.getBaseAmountJPY(), minimumBuyAmount, roundPrice, roundAmt);
+						if(strategy == 0) {
+							buyer.calculateBuyPriceNormal(lastPrice, lowPrice);
+						}else {
+							buyer.calculateBuyPriceLower(lastPrice, lowPrice);							
+						}
+						buyer.calculateBuyAmount();
+						buyers.add(buyer);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+
 			for(BitbankBuyer sbuyer : buyers) {
 				sb.append(sbuyer.sendBuyOrder());
-				sb.append(NEWLINE);
-				sb.append(sbuyer.sendBuyOrderLower());
-				sb.append(NEWLINE);
 				sb.append(NEWLINE);
 			}
 			System.out.println("Orders in bitbank / " + sb.toString());
@@ -75,17 +97,64 @@ public class BitbankJobImpl implements TradingJob {
 			e.printStackTrace();
 		}
 	}
-	
-	private static boolean hasTradePair(String[] args, String pair) {
-		if(args == null || args.length == 0) {
-			return true;
+		
+//	private static boolean hasTradePair(String[] args, String pair) {
+//		if(args == null || args.length == 0) {
+//			return true;
+//		}
+//		for(String tempPair : args) {
+//			if(tempPair.equalsIgnoreCase(pair)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+
+	@Override
+	public void getHistory(String sinceStr) {
+		Bitbankcc bb = new Bitbankcc();
+		bb.setKey(BitbankKeyReader.getReader().getApiKey(), BitbankKeyReader.getReader().getSecretKey());
+		
+		DateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date sinceDate = null;
+		try {
+			sinceDate = dateTimeFormat.parse(sinceStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
-		for(String tempPair : args) {
-			if(tempPair.equalsIgnoreCase(pair)) {
-				return true;
+		long since = sinceDate.getTime();
+		try {
+			Trades result = bb.getHistory(CurrencyPair.BTC_JPY, since);
+			Trade[] results = result != null ? result.trades : null;
+			Arrays.sort(results);
+			for(Trade trade : results) {
+				outputHistory(trade);
 			}
+			results = bb.getHistory(CurrencyPair.MONA_JPY, since).trades;
+			Arrays.sort(results);
+			for(Trade trade : results) {
+				outputHistory(trade);
+			}
+			results = bb.getHistory(CurrencyPair.BCC_JPY, since).trades;
+			Arrays.sort(results);
+			for(Trade trade : results) {
+				outputHistory(trade);
+			}
+			results = bb.getHistory(CurrencyPair.XRP_JPY, since).trades;
+			Arrays.sort(results);
+			for(Trade trade : results) {
+				outputHistory(trade);
+			}
+		} catch (BitbankException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return false;
 	}
+	
+	private void outputHistory(Trade trade) {
+		System.out.println(trade.pair + " " + trade.side + " " + trade.price + " " + trade.amount + " " + trade.executedAt.toString().replace(" ", "/"));
+	}
+
+
 
 }

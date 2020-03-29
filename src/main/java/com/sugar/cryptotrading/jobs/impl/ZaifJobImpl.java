@@ -2,9 +2,14 @@ package com.sugar.cryptotrading.jobs.impl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.sugar.cryptotrading.jobs.TradingJob;
 import com.sugar.cryptotrading.restapi.RestClient;
@@ -14,13 +19,14 @@ import com.sugar.cryptotrading.utils.zaif.ZaifOrderValues;
 
 import jp.nyatla.jzaif.api.ApiKey;
 import jp.nyatla.jzaif.api.ExchangeApi;
-import jp.nyatla.jzaif.api.PublicApi;
+import jp.nyatla.jzaif.api.result.TradeHistoryResult;
+import jp.nyatla.jzaif.api.result.TradeHistoryResult.Item;
 import jp.nyatla.jzaif.types.CurrencyPair;
 
 public class ZaifJobImpl implements TradingJob {
 	
 	@Override
-	public void placeBuyOrders() {
+	public void placeBuyOrders(int strategy) {
 		System.out.println("Zaif/TSUMITATE ORDERS! " + new Date());
 		
 		List<ZaifBuyer> sbuyers = new ArrayList();
@@ -31,43 +37,49 @@ public class ZaifJobImpl implements TradingJob {
 			ZaifOrderValues xemValues = ZaifKeyReader.getCoinValue(CurrencyPair.XEMJPY);
 			ZaifOrderValues ethValues = ZaifKeyReader.getCoinValue(CurrencyPair.ETHJPY);
 
-			ZaifBuyer xemBuyer01;
-			ZaifBuyer xemBuyer02;
+			ZaifBuyer xemBuyer;
 			if(xemValues != null) {
-				xemBuyer01 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), xemValues.getBaseAmountJPY(), xemValues.getBaseAmountJPY(), 3, 1, APIKEY, SECKEY);
-				Thread.sleep(1000);
-				xemBuyer02 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), xemValues.getBaseAmountJPY(), xemValues.getBaseAmountJPYLow(), 3, 1, APIKEY, SECKEY);
+				if(strategy == 0) {
+					xemBuyer = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), xemValues.getBaseAmountJPY(), xemValues.getBaseAmountJPY(), 3, 1, APIKEY, SECKEY);
+					xemBuyer.setBuyPriceNormal();
+				}else {
+					xemBuyer = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), xemValues.getBaseAmountJPY(), xemValues.getBaseAmountJPYLow(), 3, 1, APIKEY, SECKEY);
+					xemBuyer.setBuyPriceLower();
+				}
 				Thread.sleep(1000);
 			}else {
-				xemBuyer01 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(200), 3, 1, APIKEY, SECKEY);
-				Thread.sleep(1000);
-				xemBuyer02 = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(300), 3, 1, APIKEY, SECKEY);
+				if(strategy == 0) {
+					xemBuyer = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(200), 3, 1, APIKEY, SECKEY);					
+					xemBuyer.setBuyPriceNormal();
+				}else {
+					xemBuyer = new ZaifBuyer(CurrencyPair.XEMJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(300), 3, 1, APIKEY, SECKEY);					
+					xemBuyer.setBuyPriceLower();
+				}
 				Thread.sleep(1000);
 			}
-			xemBuyer01.setBuyPriceNormal();
-			xemBuyer02.setBuyPriceLower();
-			sbuyers.add(xemBuyer01);
-			sbuyers.add(xemBuyer02);
+			sbuyers.add(xemBuyer);
 			
-			ZaifBuyer ethBuyer01;
-			ZaifBuyer ethBuyer02;
+			ZaifBuyer ethBuyer;
 			
 			if(ethValues != null) {
-				ethBuyer01 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPY(), -2, 4, APIKEY, SECKEY);
-				Thread.sleep(1000);
-				ethBuyer02 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPYLow(), -2, 4, APIKEY, SECKEY);
+				if(strategy == 0) {
+					ethBuyer = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPY(), -2, 4, APIKEY, SECKEY);					
+				}else {
+					ethBuyer = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), ethValues.getBaseAmountJPY(), ethValues.getBaseAmountJPYLow(), -2, 4, APIKEY, SECKEY);					
+				}
 				Thread.sleep(1000);
 			}else {
-				ethBuyer01 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(200), -2, 4, APIKEY, SECKEY);
-				Thread.sleep(1000);
-				ethBuyer02 = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(300), -2, 4, APIKEY, SECKEY);
+				if(strategy == 0) {
+					ethBuyer = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(200), -2, 4, APIKEY, SECKEY);					
+					ethBuyer.setBuyPriceNormal();
+				}else {
+					ethBuyer = new ZaifBuyer(CurrencyPair.ETHJPY, new BigDecimal(10), new BigDecimal(150), new BigDecimal(300), -2, 4, APIKEY, SECKEY);					
+					ethBuyer.setBuyPriceLower();
+				}
 				Thread.sleep(2000);
 			}
 			
-			ethBuyer01.setBuyPriceNormal();
-			ethBuyer02.setBuyPriceLower();
-			sbuyers.add(ethBuyer01);
-			sbuyers.add(ethBuyer02);
+			sbuyers.add(ethBuyer);
 			
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -99,5 +111,43 @@ public class ZaifJobImpl implements TradingJob {
 		}
 		System.out.println("Orders in Zaif / " +  sb.toString());
 		System.out.println("#### END ####");
+	}
+
+	@Override
+	public void getHistory(String sinceStr) {
+		final String APIKEY = ZaifKeyReader.getApiKey();
+		final String SECKEY = ZaifKeyReader.getSecretKey();
+		
+		ApiKey apiKey = new ApiKey(APIKEY, SECKEY);
+		ExchangeApi exchangeApi = new ExchangeApi(apiKey);
+		
+		DateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date sinceDate = null;
+		try {
+			sinceDate = dateTimeFormat.parse(sinceStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		TradeHistoryResult result = exchangeApi.tradeHistory(null, null, null, null, null, sinceDate, null, CurrencyPair.ETHJPY);
+		List<Item> historyList = result.history;
+		historyList = historyList.stream()
+				.sorted(Comparator.comparing(Item::getTimestamp))
+				.collect(Collectors.toList());
+		for(TradeHistoryResult.Item item : historyList) {
+			outputHistory(item);
+		}
+		
+		result = exchangeApi.tradeHistory(null, null, null, null, null, sinceDate, null, CurrencyPair.XEMJPY);
+		historyList = result.history;
+		historyList = historyList.stream()
+				.sorted(Comparator.comparing(Item::getTimestamp))
+				.collect(Collectors.toList());
+		for(TradeHistoryResult.Item item : historyList) {
+			outputHistory(item);
+		}
+	}
+	
+	private void outputHistory(TradeHistoryResult.Item item) {
+		System.out.println(item.currency_pair + " " + item.action.toString() + " " + item.price + " " + item.amount + " " + item.timestamp.toString().replace(" ", "/"));
 	}
 }

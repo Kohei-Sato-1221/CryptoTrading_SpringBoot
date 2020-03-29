@@ -37,33 +37,53 @@ import jp.nyatla.jzaif.types.TradeType;
 
 import org.json.JSONObject;
 
+import cc.bitbank.entity.Trade;
+
 /**
  * ExchangeAPIのtrade_history コマンドの戻り値を格納します。
  * 拡張パラメータは{@link #success}がtrueのときのみ有効です。
  */
 public class TradeHistoryResult extends ExchangeCommonResult
 {
-	public class Item
+	public class Item implements Comparable<Item>
 	{
 		final public long id;
 		final public CurrencyPair currency_pair;
 		final public TradeType action;
 		final public double amount;
 		final public double price;
-		final public double fee;
+		public double fee;
 		final public TradeType your_action;
 		final public double bonus;
 		final public Date timestamp;
-		public Item(long i_id,JSONObject i_jso){
+		public Item(long i_id,JSONObject i_jso) {
 			this.id=i_id;
 			this.currency_pair=CurrencyPair.toEnum(i_jso.getString("currency_pair"));
 			this.action=TradeType.toEnum(i_jso.getString("action"));
 			this.amount=i_jso.getDouble("amount");
 			this.price=i_jso.getDouble("price");
-			this.fee=i_jso.getDouble("fee");
+			try {
+				this.fee=i_jso.getDouble("fee");				
+			}catch(Exception e) {
+				this.fee= 0.0;
+			}
 			this.your_action=TradeType.toEnum(i_jso.getString("your_action"));
 			this.bonus=i_jso.isNull("bonus")?Double.NaN:i_jso.getDouble("bonus");
 			this.timestamp=new Date(i_jso.getLong("timestamp")*1000);
+		}
+		
+		public Date getTimestamp() {
+			return this.timestamp;
+		}
+		
+		@Override
+		public int compareTo(Item item) {
+	    	if(this.timestamp.after(item.timestamp)) {
+	    		return -1;
+	    	}else if(this.timestamp.before(item.timestamp)){
+	    		return 1;
+	    	}
+			return 0;
 		}
 	}
 	final public List<Item> history;

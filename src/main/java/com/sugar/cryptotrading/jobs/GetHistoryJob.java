@@ -3,10 +3,20 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import com.sugar.cryptotrading.jobs.impl.BitbankJobImpl;
+import com.sugar.cryptotrading.jobs.impl.ZaifJobImpl;
+
 import java.sql.ResultSet;
 
-public class TestJob {
+public class GetHistoryJob {
 //	.forName("com.mysql.jdbc.Driver");
+	
+	public void getHistory() {
+		String since = "2020/03/03 0:00:00";
+		new ZaifJobImpl().getHistory(since);
+		new BitbankJobImpl().getHistory(since);
+	}
 	
 	public void getData() {
 		try {
