@@ -50,7 +50,7 @@ public class BitbankOrderValues {
 		this.pair = pair;
 	}
 
-	public BigDecimal getBaseAmountJPYLow(Bitbankcc bb) throws BitbankException, IOException {
+	public BigDecimal getBaseAmountJPYLow() throws BitbankException, IOException {
 		return baseAmountJPYLow;			
 	}
 
@@ -58,7 +58,7 @@ public class BitbankOrderValues {
 		this.baseAmountJPYLow = baseAmountJPYLow;
 	}
 
-	public BigDecimal getBaseAmountJPY(Bitbankcc bb) {
+	public BigDecimal getBaseAmountJPY() {
 		return baseAmountJPY;
 	}
 
