@@ -13,7 +13,7 @@ import com.sugar.cryptotrading.jobs.impl.ZaifJobImpl;
 public class SugarScheduler{
 
 //	@Scheduled(fixedRate = 86400000, initialDelay = 1000)
-	@Scheduled(cron = "15 18 * * * *", zone = "Asia/Tokyo")
+	@Scheduled(cron = "0 45 21 * * *", zone = "Asia/Tokyo")
 	public void dailyScheduledJob01() {
 		System.out.println("### SugarScheduler#dailyScheduledJob01 START!!");
 		TradingJob bbJob = new BitbankJobImpl();
@@ -25,7 +25,7 @@ public class SugarScheduler{
 		System.out.println("### SugarScheduler#dailyScheduledJob01 END!!");
 	}
 	
-	@Scheduled(cron = "15 6 * * * *", zone = "Asia/Tokyo")
+	@Scheduled(cron = "0 45 09 * * *", zone = "Asia/Tokyo")
 	public void dailyScheduledJob02() {
 		System.out.println("### SugarScheduler#dailyScheduledJob01 START!!");
 		TradingJob bbJob = new BitbankJobImpl();
