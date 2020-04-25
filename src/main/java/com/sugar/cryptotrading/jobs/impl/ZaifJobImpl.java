@@ -117,6 +117,7 @@ public class ZaifJobImpl implements TradingJob {
 
 	@Override
 	public void getHistory(String sinceStr) {
+		RestClient restClient = new RestClient();
 		final String APIKEY = ZaifKeyReader.getApiKey();
 		final String SECKEY = ZaifKeyReader.getSecretKey();
 		
@@ -136,7 +137,7 @@ public class ZaifJobImpl implements TradingJob {
 				.sorted(Comparator.comparing(Item::getTimestamp))
 				.collect(Collectors.toList());
 		for(TradeHistoryResult.Item item : historyList) {
-			outputHistory(item);
+			restClient.saveTradeResults(item);
 		}
 		
 		result = exchangeApi.tradeHistory(null, null, null, null, null, sinceDate, null, CurrencyPair.XEMJPY);
@@ -145,7 +146,7 @@ public class ZaifJobImpl implements TradingJob {
 				.sorted(Comparator.comparing(Item::getTimestamp))
 				.collect(Collectors.toList());
 		for(TradeHistoryResult.Item item : historyList) {
-			outputHistory(item);
+			restClient.saveTradeResults(item);
 		}
 	}
 	

@@ -12,8 +12,7 @@ import java.sql.ResultSet;
 public class GetHistoryJob {
 //	.forName("com.mysql.jdbc.Driver");
 	
-	public void getHistory() {
-		String since = "2020/03/03 0:00:00";
+	public void getHistory(String since) {
 		new ZaifJobImpl().getHistory(since);
 		new BitbankJobImpl().getHistory(since);
 	}

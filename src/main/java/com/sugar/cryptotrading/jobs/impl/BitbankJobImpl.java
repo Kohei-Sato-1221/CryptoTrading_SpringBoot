@@ -98,20 +98,9 @@ public class BitbankJobImpl implements TradingJob {
 		}
 	}
 		
-//	private static boolean hasTradePair(String[] args, String pair) {
-//		if(args == null || args.length == 0) {
-//			return true;
-//		}
-//		for(String tempPair : args) {
-//			if(tempPair.equalsIgnoreCase(pair)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
 	@Override
 	public void getHistory(String sinceStr) {
+		RestClient restClient = new RestClient();
 		Bitbankcc bb = new Bitbankcc();
 		bb.setKey(BitbankKeyReader.getReader().getApiKey(), BitbankKeyReader.getReader().getSecretKey());
 		
@@ -128,22 +117,22 @@ public class BitbankJobImpl implements TradingJob {
 			Trade[] results = result != null ? result.trades : null;
 			Arrays.sort(results);
 			for(Trade trade : results) {
-				outputHistory(trade);
+				restClient.saveTradeResults(trade);
 			}
 			results = bb.getHistory(CurrencyPair.MONA_JPY, since).trades;
 			Arrays.sort(results);
 			for(Trade trade : results) {
-				outputHistory(trade);
+				restClient.saveTradeResults(trade);
 			}
 			results = bb.getHistory(CurrencyPair.BCC_JPY, since).trades;
 			Arrays.sort(results);
 			for(Trade trade : results) {
-				outputHistory(trade);
+				restClient.saveTradeResults(trade);
 			}
 			results = bb.getHistory(CurrencyPair.XRP_JPY, since).trades;
 			Arrays.sort(results);
 			for(Trade trade : results) {
-				outputHistory(trade);
+				restClient.saveTradeResults(trade);
 			}
 		} catch (BitbankException | IOException e) {
 			// TODO Auto-generated catch block
@@ -151,10 +140,5 @@ public class BitbankJobImpl implements TradingJob {
 		}
 	}
 	
-	private void outputHistory(Trade trade) {
-		System.out.println(trade.pair + " " + trade.side + " " + trade.price + " " + trade.amount + " " + trade.executedAt.toString().replace(" ", "/"));
-	}
-
-
 
 }
