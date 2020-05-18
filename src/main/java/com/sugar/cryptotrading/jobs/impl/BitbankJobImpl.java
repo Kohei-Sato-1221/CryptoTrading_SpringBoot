@@ -63,21 +63,27 @@ public class BitbankJobImpl implements TradingJob {
 						minimumBuyAmount = new BigDecimal("0.3");
 						roundPrice = 2;
 						roundAmt = 2;
-					}else if(pair.equals(CurrencyPair.BCC_JPY)){
+					}else if(pair.equals(CurrencyPair.BCC_JPY)){	
 						minimumBuyAmount = new BigDecimal("0.0005");
 						roundPrice = 2;
 						roundAmt = 4;
 					}
 					
 					if(minimumBuyAmount != null) {
-						BitbankBuyer buyer = new BitbankBuyer(bb, pair, order.getBaseAmountJPY(), minimumBuyAmount, roundPrice, roundAmt);
-						if(strategy == 0) {
+						BigDecimal buyOrderJPYAmount = order.getBaseAmountJPY();
+						BigDecimal buyOrderJPYAmountLow = order.getBaseAmountJPYLow();
+						BitbankBuyer buyer;
+						if(strategy == 0 && buyOrderJPYAmount.compareTo(BigDecimal.ZERO) > 0) {
+							buyer = new BitbankBuyer(bb, pair, order.getBaseAmountJPY(), minimumBuyAmount, roundPrice, roundAmt);
 							buyer.calculateBuyPriceNormal(lastPrice, lowPrice);
-						}else {
-							buyer.calculateBuyPriceLower(lastPrice, lowPrice);							
+							buyer.calculateBuyAmount();
+							buyers.add(buyer);
+						}else if(strategy == 1 && buyOrderJPYAmountLow.compareTo(BigDecimal.ZERO) > 0) {
+							buyer = new BitbankBuyer(bb, pair, order.getBaseAmountJPYLow(), minimumBuyAmount, roundPrice, roundAmt);
+							buyer.calculateBuyPriceLower(lastPrice, lowPrice);					
+							buyer.calculateBuyAmount();
+							buyers.add(buyer);
 						}
-						buyer.calculateBuyAmount();
-						buyers.add(buyer);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

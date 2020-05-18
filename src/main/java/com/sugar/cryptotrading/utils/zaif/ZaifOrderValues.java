@@ -16,7 +16,7 @@ public class ZaifOrderValues {
 		this.setBaseAmountJPYLow(new BigDecimal(baseAmountJPYLow));					
 	}
 	
-	private CurrencyPair convertPair(String pairStr) {
+	public CurrencyPair convertPair(String pairStr) {
 		if(pairStr.equals("xem_jpy")) {
 			return CurrencyPair.XEMJPY;
 		}else if(pairStr.equals("eth_jpy")){

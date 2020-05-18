@@ -69,9 +69,18 @@ public class BitbankKeyReader {
 		try {
 			Stream<String> lines = br.lines();
 			lines.forEach(line -> {
-//				System.out.println("line:" + line);
 				String[] keyAndValue = line.split(",");
-				if(keyAndValue.length == 3) valList.add(new BitbankOrderValues(keyAndValue[0], keyAndValue[1], keyAndValue[2]));
+				String pair = keyAndValue[0];
+				if(keyAndValue.length == 3) {
+					boolean isNewPair= true;
+					for(BitbankOrderValues val : valList) {
+						if(val.getPair().equals(val.convertPair(pair))) {
+							isNewPair = false;
+							break;
+						}
+					}
+					if(isNewPair) valList.add(new BitbankOrderValues(pair, keyAndValue[1], keyAndValue[2]));
+				}
 			});
 			br.close();
 		} catch (NullPointerException e) {

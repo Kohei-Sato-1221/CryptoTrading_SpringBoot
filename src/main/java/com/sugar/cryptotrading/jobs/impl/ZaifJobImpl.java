@@ -57,7 +57,11 @@ public class ZaifJobImpl implements TradingJob {
 				}
 				Thread.sleep(1000);
 			}
-			sbuyers.add(xemBuyer);
+			if(strategy == 0 && xemValues != null && xemValues.getBaseAmountJPY().compareTo(BigDecimal.ZERO) > 0) {
+				sbuyers.add(xemBuyer);				
+			}else if(strategy == 1 && xemValues != null && xemValues.getBaseAmountJPYLow().compareTo(BigDecimal.ZERO) > 0) {
+				sbuyers.add(xemBuyer);
+			}
 			
 			ZaifBuyer ethBuyer;
 			
@@ -81,7 +85,11 @@ public class ZaifJobImpl implements TradingJob {
 				Thread.sleep(2000);
 			}
 			
-			sbuyers.add(ethBuyer);
+			if(strategy == 0 && ethValues != null && ethValues.getBaseAmountJPY().compareTo(BigDecimal.ZERO) > 0) {
+				sbuyers.add(ethBuyer);				
+			}else if(strategy == 1 && ethValues != null && ethValues.getBaseAmountJPYLow().compareTo(BigDecimal.ZERO) > 0) {
+				sbuyers.add(ethBuyer);
+			}
 			
 		} catch (IOException e1) {
 			e1.printStackTrace();

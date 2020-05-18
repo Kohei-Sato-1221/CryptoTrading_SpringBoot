@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.sugar.cryptotrading.utils.bitbank.BitbankOrderValues;
+
 import jp.nyatla.jzaif.types.CurrencyPair;
 
 
@@ -72,11 +74,18 @@ public class ZaifKeyReader {
 		try {
 			Stream<String> lines = br.lines();
 			lines.forEach(line -> {
-//				System.out.println("line:" + line);
 				String[] keyAndValue = line.split(",");
+				String pair = keyAndValue[0];
 				if(keyAndValue.length == 3) {
-					ZaifOrderValues temVal = new ZaifOrderValues(keyAndValue[0], keyAndValue[1], keyAndValue[2]);
-					if(temVal.getPair() != null && temVal.getBaseAmountJPY() != null && temVal.getBaseAmountJPYLow() != null) {
+					boolean isNewPair= true;
+					for(ZaifOrderValues val : valList) {
+						if(val.getPair().equals(val.convertPair(pair))) {
+							isNewPair = false;
+							break;
+						}
+					}
+					ZaifOrderValues temVal = new ZaifOrderValues(pair, keyAndValue[1], keyAndValue[2]);
+					if(isNewPair && temVal.getPair() != null && temVal.getBaseAmountJPY() != null && temVal.getBaseAmountJPYLow() != null) {
 						valList.add(temVal);
 					}
 				}

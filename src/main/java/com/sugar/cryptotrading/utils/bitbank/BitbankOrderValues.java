@@ -19,7 +19,7 @@ public class BitbankOrderValues {
 	}
 	
 	
-	private CurrencyPair convertPair(String pairStr) {
+	public CurrencyPair convertPair(String pairStr) {
 		switch (pairStr) {
 		case "btc_jpy":
 			return CurrencyPair.BTC_JPY;

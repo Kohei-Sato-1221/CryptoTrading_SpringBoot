@@ -25,16 +25,17 @@ public class SugarScheduler{
 		System.out.println("### SugarScheduler#dailyScheduledJob01 END!!");
 	}
 	
+//	@Scheduled(fixedRate = 86400000, initialDelay = 1000)
 	@Scheduled(cron = "0 45 09 * * *", zone = "Asia/Tokyo")
 	public void dailyScheduledJob02() {
-		System.out.println("### SugarScheduler#dailyScheduledJob01 START!!");
+		System.out.println("### SugarScheduler#dailyScheduledJob02 START!!");
 		TradingJob bbJob = new BitbankJobImpl();
 		TradingJob zaifJob = new ZaifJobImpl();
 		
 		bbJob.placeBuyOrders(1);
 		zaifJob.placeBuyOrders(1);
 		
-		System.out.println("### SugarScheduler#dailyScheduledJob01 END!!");
+		System.out.println("### SugarScheduler#dailyScheduledJob02 END!!");
 	}
 	
 }
