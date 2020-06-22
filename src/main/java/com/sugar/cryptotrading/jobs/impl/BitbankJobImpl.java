@@ -63,6 +63,10 @@ public class BitbankJobImpl implements TradingJob {
 						minimumBuyAmount = new BigDecimal("0.3");
 						roundPrice = 2;
 						roundAmt = 2;
+					}else if(pair.equals(CurrencyPair.ETH_JPY)) {
+						minimumBuyAmount = new BigDecimal("0.01");
+						roundPrice = 3;
+						roundAmt = 3;
 					}else if(pair.equals(CurrencyPair.BCC_JPY)){	
 						minimumBuyAmount = new BigDecimal("0.0005");
 						roundPrice = 2;

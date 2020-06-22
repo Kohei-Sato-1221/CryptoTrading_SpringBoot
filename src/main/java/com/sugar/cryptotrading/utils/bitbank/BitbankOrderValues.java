@@ -3,7 +3,6 @@ package com.sugar.cryptotrading.utils.bitbank;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import cc.bitbank.Bitbankcc;
 import cc.bitbank.entity.enums.CurrencyPair;
 import cc.bitbank.exception.BitbankException;
 
@@ -37,6 +36,8 @@ public class BitbankOrderValues {
 			return CurrencyPair.BCC_JPY;
 		case "bcc_btc":
 			return CurrencyPair.BCC_BTC;
+		case "eth_jpy":
+			return CurrencyPair.ETH_JPY;
 		default:
 			return CurrencyPair.BTC_JPY;
 		}
